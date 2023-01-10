@@ -34,13 +34,19 @@ mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
  * Socket.io
  */
 io.use(async (socket, next) => {
+  console.log("hasnst");
+  console.log(socket.handshake.query);
+  console.log(socket.handshake.query.token);
   if (socket.handshake.query && socket.handshake.query.token) {
+    console.log("log2");
     const { token } = socket.handshake.query;
     jwt.verify(token, config.jwt.secret, (err, decoded) => {
       if (err) {
+        console.log("log3");
         next(new ApiError(httpStatus.UNAUTHORIZED, 'authentication error'));
         return;
       }
+      console.log("log4");
       // eslint-disable-next-line no-param-reassign
       socket.userData = decoded;
       next();
@@ -50,10 +56,13 @@ io.use(async (socket, next) => {
   }
 }).on('connection', (socket) => {
   // Connection now authenticated to receive further events
+  console.log(socket.userData);
   socket.join(socket.userData.sub);
+
   userService.changeUserStatusById(socket.userData.sub, 'online');
 
   socket.on('typing', (data) => {
+
     socket.to(data.receiver).emit('typing', { conversationId: data.conversationId });
   });
 
