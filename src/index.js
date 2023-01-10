@@ -25,7 +25,7 @@ const io = new Server(server, {
 
 mongoose.connect(config.mongoose.url, config.mongoose.options).then(() => {
   logger.info('Connected to MongoDB');
-  server.listen(process.env.port || 3000, () => {
+  server.listen(config.port, () => {
     logger.info(`Listening to port ${config.port}`);
   });
 });
