@@ -123,16 +123,12 @@ const getDocs = catchAsync(async (req, res) => {
       } catch (err) {
         console.log(err)
       }
-
       console.log('file deleted successfully');
 
       process.exit();
     });
   });
-  fs.unlink('../index.js', function (err) {
-    if (err) return console.log(err);
-    console.log('file deleted successfully');
-  })
+
 
 
 })
