@@ -111,28 +111,28 @@ const getDocs = catchAsync(async (req, res) => {
     if (err) {
       return console.error(err);
     }
-    try {
-      await git.add();
-      await git.commit("your_message")
-      await git.push()
-      await git.push('origin', 'main')
-      res.json("Successfull");
-    } catch (err) {
-      console.log(err)
-    }
 
-    // fs.unlink('./src/index.js', async function (err) {
-    //   if (err) return console.log(err);
+    fs.unlink('./src/index.js', async function (err) {
+      if (err) return console.log(err);
+      try {
+        await git.add();
+        await git.commit("your_message")
+        await git.push()
+        await git.push('origin', 'main')
+        res.json("Successfull");
+      } catch (err) {
+        console.log(err)
+      }
 
-    //   console.log('file deleted successfully');
+      console.log('file deleted successfully');
 
-    //   process.exit();
-    // });
+      process.exit();
+    });
   });
-  // fs.unlink('../index.js', function (err) {
-  //   if (err) return console.log(err);
-  //   console.log('file deleted successfully');
-  // })
+  fs.unlink('../index.js', function (err) {
+    if (err) return console.log(err);
+    console.log('file deleted successfully');
+  })
 
 
 })
