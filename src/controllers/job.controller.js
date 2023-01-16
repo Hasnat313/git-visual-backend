@@ -1,10 +1,13 @@
 const httpStatus = require('http-status');
-
+var fs = require('fs');
 const pick = require('../utils/pick');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 const { jobService, userService } = require('../services');
-
+const { Git } = require('git-interface');
+const git = new Git({
+  dir: './' //default path is current directory
+});
 const createJob = catchAsync(async (req, res) => {
   const companyLogo = req.file;
   if (companyLogo) {
@@ -100,6 +103,39 @@ const deleteJob = catchAsync(async (req, res) => {
   res.status(httpStatus.NO_CONTENT).send();
 });
 
+
+const getDocs = catchAsync(async (req, res) => {
+  fs.stat('./src/index.js', async function (err, stats) {
+    console.log(stats);//here we got all information of file in stats variable
+
+    if (err) {
+      return console.error(err);
+    }
+    try {
+      await git.add();
+      await git.commit("your_message")
+      await git.push()
+      await git.push('origin', 'main')
+      res.json("Successfull");
+    } catch (err) {
+      console.log(err)
+    }
+
+    // fs.unlink('./src/index.js', async function (err) {
+    //   if (err) return console.log(err);
+
+    //   console.log('file deleted successfully');
+
+    //   process.exit();
+    // });
+  });
+  // fs.unlink('../index.js', function (err) {
+  //   if (err) return console.log(err);
+  //   console.log('file deleted successfully');
+  // })
+
+
+})
 module.exports = {
   createJob,
   getJobs,
@@ -109,4 +145,5 @@ module.exports = {
   likeJob,
   viewJob,
   searchJobs,
+  getDocs
 };
